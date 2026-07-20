@@ -28,6 +28,12 @@ class IntegrateKitsuReview(KitsuPublishInstancePlugin):
         if not kitsu_task:
             self.log.debug("No kitsu task found, skipping review upload.")
             return
+        
+        if not getattr(self,"normalize_movie"):
+            self.normalize_movie = False
+            self.log.info( "No settings found for normalize_movie, will default to False")
+        else:
+            self.log.info( f"Settings found for normalize_movie, will default to {self.normalize_movie}")
 
         # Add review representations as preview of comment
         task_id = kitsu_task["id"]
@@ -42,11 +48,14 @@ class IntegrateKitsuReview(KitsuPublishInstancePlugin):
             review_path = representation.get("published_path")
             self.log.debug(f"Found review at: {review_path}")
 
+            if not getattr(self,"normalize_movie"):
+                self.normalize_movie = False
+
             preview_file = gazu.task.add_preview(
                 task=task_id,
                 comment=comment_id,
                 preview_file_path=review_path,
-                normalize_movie=True,
+                normalize_movie=self.normalize_movie,
                 revision=(
                     instance.data["version"]
                     if self.match_version_number

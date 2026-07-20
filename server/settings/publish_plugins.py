@@ -114,6 +114,13 @@ class IntegrateKitsuReviews(BaseSettingsModel):
             " product version and revision number and cause errors during publish."
         )
     )
+    normalize_movie: bool = SettingsField(
+        title="Normalize movie uploads",
+        description=(
+            "Toggles whether to normalize movies uploaded to Kitsu.\n\n"
+            "Doing so may ensure files work, but may increase storage sizes due to FFMPEG encoding."
+        )
+    )
    
 class GenerateKitsuEditorials(BaseSettingsModel):
      task_redirect: str = SettingsField(
@@ -325,7 +332,8 @@ PUBLISH_DEFAULT_VALUES = {
         },
     },
     "IntegrateKitsuReview": {
-        "match_version_number": True
+        "match_version_number": True,
+        "normalize_movie": False
     },
     "GenerateKitsuEditorial": {
         "task_redirect": "Animatic_Ref"
